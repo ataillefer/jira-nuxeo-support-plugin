@@ -1,5 +1,7 @@
 # JIRA plugin for Nuxeo
 
+Plugin for JIRA to automatically attach to an issue a zip containing useful information coming from a Nuxeo server
+
 Automatically attach to a JIRA issue a zip containing useful information coming from the server:
 - the server log
 - server configuration
@@ -16,5 +18,4 @@ Automatically attach to a JIRA issue a zip containing useful information coming 
 ## JIRA side
 
 - create a plugin with a form including: server URL, userName, password# JIRA plugin for Nuxeo
-
 
