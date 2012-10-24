@@ -17,8 +17,11 @@
 package org.nuxeo.ecm.server.info.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
@@ -27,11 +30,24 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.Environment;
+import org.nuxeo.connect.NuxeoConnectClient;
+import org.nuxeo.connect.identity.LogicalInstanceIdentifier;
+import org.nuxeo.connect.update.LocalPackage;
+import org.nuxeo.connect.update.Package;
+import org.nuxeo.connect.update.PackageState;
+import org.nuxeo.connect.update.PackageType;
+import org.nuxeo.connect.update.PackageVisibility;
+import org.nuxeo.connect.update.standalone.StandaloneUpdateService;
 import org.nuxeo.ecm.admin.SystemInfoManager;
 import org.nuxeo.ecm.admin.runtime.RuntimeInstrospection;
 import org.nuxeo.ecm.admin.runtime.SimplifiedBundleInfo;
 import org.nuxeo.ecm.admin.runtime.SimplifiedServerInfo;
 import org.nuxeo.ecm.server.info.service.ServerInfoCollector;
+import org.nuxeo.launcher.config.ConfigurationGenerator;
+import org.nuxeo.launcher.info.CommandInfo;
+import org.nuxeo.launcher.info.CommandSetInfo;
+import org.nuxeo.launcher.info.PackageInfo;
 
 /**
  * Default implementation of a {@link ServerInfoCollector}.
@@ -46,7 +62,7 @@ public class ServerInfoCollectorImpl implements ServerInfoCollector {
     private static final Log log = LogFactory.getLog(ServerInfoCollectorImpl.class);
 
     @Override
-    public File collectInfoAsZip() throws IOException {
+    public File collectInfoAsZip() throws Exception {
 
         // TODO: let the caller delete the file when done with it
         File tmpFile = File.createTempFile("NXserverInfo-", ".zip");
@@ -67,6 +83,19 @@ public class ServerInfoCollectorImpl implements ServerInfoCollector {
             String distribInfo = getDistribInfo(serverInfo);
             addZipEntry(out, "distrib.info", distribInfo);
 
+            // Installed marketplace packages
+            ConfigurationGenerator cg = new ConfigurationGenerator();
+            String installedPackages = getInstalledPackages(cg.getEnv());
+            addZipEntry(out, "packages.info", installedPackages);
+
+            // Nuxeo configuration (nuxeo.conf)
+            File configFile = cg.getNuxeoConf();
+            addZipEntry(out, "nuxeo.conf", configFile);
+
+            // Server logs (server.log)
+            File logFile = new File(cg.getLogDir(), "server.log");
+            addZipEntry(out, "server.log", logFile);
+
             return tmpFile;
         } finally {
             try {
@@ -84,6 +113,28 @@ public class ServerInfoCollectorImpl implements ServerInfoCollector {
         out.putNextEntry(entry);
         out.write(entryStr.getBytes());
         out.closeEntry();
+    }
+
+    protected void addZipEntry(ZipOutputStream out, String entryPath,
+            File entryFile) throws IOException {
+        ZipEntry entry = new ZipEntry(entryPath);
+        out.putNextEntry(entry);
+        writeFileEntry(out, entryFile);
+        out.closeEntry();
+    }
+
+    protected void writeFileEntry(OutputStream out, File entryFile)
+            throws FileNotFoundException, IOException {
+        FileInputStream fis = new FileInputStream(entryFile);
+        byte[] bytes = new byte[1024];
+        try {
+            int read;
+            while ((read = fis.read(bytes)) > 0) {
+                out.write(bytes, 0, read);
+            }
+        } finally {
+            fis.close();
+        }
     }
 
     protected String getDistribInfo(SimplifiedServerInfo serverInfo) {
@@ -137,6 +188,68 @@ public class ServerInfoCollectorImpl implements ServerInfoCollector {
             sb.append(value.getVersion());
             sb.append("\n");
         }
+    }
+
+    protected String getInstalledPackages(Environment env) throws Exception {
+
+        StandaloneUpdateService standaloneUpdateService = new StandaloneUpdateService(
+                env);
+        List<LocalPackage> packagesList = standaloneUpdateService.getPackages();
+
+        if (packagesList.isEmpty()) {
+            return "None";
+        } else {
+            NuxeoConnectClient.getPackageManager().sort(packagesList);
+            StringBuilder sb = new StringBuilder();
+            for (Package pkg : packagesList) {
+                CommandSetInfo cset = new CommandSetInfo();
+                CommandInfo cmdInfo = cset.newCommandInfo(CommandInfo.CMD_LIST);
+                newPackageInfo(cmdInfo, pkg);
+                String packageDescription;
+                switch (pkg.getState()) {
+                case PackageState.DOWNLOADING:
+                    packageDescription = "downloading";
+                    break;
+                case PackageState.DOWNLOADED:
+                    packageDescription = "downloaded";
+                    break;
+                case PackageState.INSTALLING:
+                    packageDescription = "installing";
+                    break;
+                case PackageState.INSTALLED:
+                    packageDescription = "installed";
+                    break;
+                case PackageState.STARTED:
+                    packageDescription = "started";
+                    break;
+                case PackageState.REMOTE:
+                    packageDescription = "remote";
+                    break;
+                default:
+                    packageDescription = "unknown";
+                    break;
+                }
+                packageDescription = String.format("%6s %11s\t", pkg.getType(),
+                        packageDescription);
+                if (pkg.getState() == PackageState.REMOTE
+                        && pkg.getType() != PackageType.STUDIO
+                        && pkg.getVisibility() != PackageVisibility.PUBLIC
+                        && !LogicalInstanceIdentifier.isRegistered()) {
+                    packageDescription += "Registration required for ";
+                }
+                packageDescription += String.format("%s (id: %s)\n",
+                        pkg.getName(), pkg.getId());
+                sb.append(packageDescription);
+            }
+            return sb.toString();
+        }
+    }
+
+    protected PackageInfo newPackageInfo(CommandInfo cmdInfo, Package pkg) {
+        PackageInfo packageInfo = new PackageInfo(pkg.getName(),
+                pkg.getVersion().toString(), pkg.getId(), pkg.getState());
+        cmdInfo.packages.add(packageInfo);
+        return packageInfo;
     }
 
 }

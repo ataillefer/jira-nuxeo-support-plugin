@@ -17,7 +17,6 @@
 package org.nuxeo.ecm.server.info.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -38,6 +37,6 @@ public interface ServerInfoCollector extends Serializable {
     /**
      * Collects server info as a ZIP file.
      */
-    File collectInfoAsZip() throws IOException;
+    File collectInfoAsZip() throws Exception;
 
 }

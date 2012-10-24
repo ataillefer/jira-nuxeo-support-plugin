@@ -17,7 +17,6 @@
 package org.nuxeo.ecm.server.info.jaxrs;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -47,7 +46,7 @@ public class ServerInfoCollectorResource extends ModuleRoot {
     @GET
     @Path("info.zip")
     @Produces("application/zip")
-    public Response doGet() throws IOException {
+    public Response doGet() throws Exception {
 
         ServerInfoCollector serverInfoCollector = Framework.getLocalService(ServerInfoCollector.class);
         // TODO: find a way to delete the File after written in the response by
