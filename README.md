@@ -32,4 +32,5 @@ The ZIP structure is:
 
 ### JIRA side
 
-The plugin adds custom fields on the issue form including: server URL, user name, password and a button to collect the information from the Nuxeo server.
+The plugin adds a new action to the ``More Actions`` menu that opens a popup with a form asking for the Nuxeo server URL and the user credentials.
+Submitting the form collects the information from the Nuxeo server as a ZIP file and attaches it to the issue.
