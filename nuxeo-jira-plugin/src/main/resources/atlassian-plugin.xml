@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}"
+	name="${project.name}" plugins-version="2">
+	<plugin-info>
+		<description>${project.description}</description>
+		<version>${project.version}</version>
+		<vendor name="${project.organization.name}" url="${project.organization.url}" />
+	</plugin-info>
+	<resource type="i18n" name="i18n" location="org.nuxeo.jira.nuxeo-jira-plugin" />
+
+	<web-section key="nuxeo-operations" name="Nuxeo Operations Section"
+		location="opsbar-operations" i18n-name-key="webfragments.view.issue.opsbar.nx.operations.attachments"
+		weight="35" />
+
+	<web-item key="attach-nuxeo--server-resources" name="Attach file to this issue"
+		section="nuxeo-operations" i18n-name-key="webfragments.view.issue.opsbar.nx.operations.attachments"
+		weight="10">
+		<label key="org.nuxeo.jira.resources.attach" />
+		<tooltip key="admin.issue.operations.plugin.attach.file.name" />
+		<styleClass>issueaction-attach-file</styleClass>
+		<link linkId="attach-nuxeo-resources">
+			/secure/AttachNuxeoResourcesAction!default.jspa?id=${issueId}
+		</link>
+		<condition
+			class="com.atlassian.jira.plugin.webfragment.conditions.CanAttachFileToIssueCondition" />
+	</web-item>
+
+	<webwork1 key="attach-nuxeo-resources" name="Attach Nuxeo Server Resources"
+		class="java.lang.Object">
+		<actions>
+			<action name="org.nuxeo.jira.customactions.AttachNuxeoResourcesAction"
+				alias="AttachNuxeoResourcesAction">
+				 <view name="input">/templates/attach_nuxeoresources.vm</view>
+				 <view name="error">/templates/attach_nuxeoresources.vm</view>
+			</action>
+		</actions>
+	</webwork1>
+
+</atlassian-plugin>
