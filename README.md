@@ -12,16 +12,24 @@ Plugin for JIRA to attach to an issue a ZIP containing useful information fetche
 
 ### Nuxeo side
 
-Exposes a service through a JAX-RS resource that allows to download the ZIP file.
+The ``nuxeo-server-info`` plugin declares:
+
+- a service to collect the information: ``ServerInfoCollector``
+- a JAX-RS resource to expose this service by allowing to download a ZIP file containing the collected information
+
+The JAX-RS resource URL is:
+
+    http://server:port/nuxeo/site/collectServerInfo/info.zip
+
 The ZIP structure is:
 
-server_info.zip
-  |__ system.info
-  |__ distrib.info
-  |__ packages.info
-  |__ nuxeo.conf
-  |__ server.log
+    server_info.zip
+      |__ system.info
+      |__ distrib.info
+      |__ packages.info
+      |__ nuxeo.conf
+      |__ server.log
 
 ### JIRA side
 
-Plugin that adds custom fields on the issue form including: server URL, user name, password and a button to collect the information from the Nuxeo server.
+The plugin adds custom fields on the issue form including: server URL, user name, password and a button to collect the information from the Nuxeo server.
