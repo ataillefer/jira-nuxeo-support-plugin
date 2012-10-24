@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.nuxeo.ecm</groupId>
-  <artifactId>jira-nuxeo-support-parent</artifactId>
+  <artifactId>nuxeo-server-info-parent</artifactId>
   <packaging>pom</packaging>
-  <name>JIRA Nuxeo Support Plugin Parent Project</name>
-  <description>JIRA Nuxeo Support Plugin Parent Project</description>
+  <name>Nuxeo Server Info Parent Project</name>
+  <description>Nuxeo Server Info Parent Project</description>
   <version>1.0-SNAPSHOT</version>
 
   <mailingLists>
@@ -40,12 +40,11 @@
     <nuxeo.distribution.version>5.7-SNAPSHOT</nuxeo.distribution.version>
     <nuxeo.distribution.tools.version>1.11.5</nuxeo.distribution.tools.version>
     <nuxeo.ftest.version>1.7.2</nuxeo.ftest.version>
-    <jira.nuxeo.support.distrib.version>1.0-SNAPSHOT</jira.nuxeo.support.distrib.version>
+    <nuxeo.server.info.distrib.version>1.0-SNAPSHOT</nuxeo.server.info.distrib.version>
   </properties>
 
   <modules>
-    <module>jira-nuxeo-support-core</module>
-    <module>jira-nuxeo-support-test</module>
+    <module>nuxeo-server-info-core</module>
   </modules>
 
   <dependencyManagement>

@@ -1,21 +1,27 @@
 # JIRA plugin for Nuxeo
 
-Plugin for JIRA to automatically attach to an issue a zip containing useful information coming from a Nuxeo server
+Plugin for JIRA to attach to an issue a ZIP containing useful information fetched from a Nuxeo server, such as:
 
-Automatically attach to a JIRA issue a zip containing useful information coming from the server:
-- the server log
-- server configuration
-- installed packages
-- nuxeo.conf
-- XML export
+- system information (OS, JVM)
+- Nuxeo distribution
+- installed marketplace packages
+- Nuxeo configuration (nuxeo.conf)
+- server logs (server.log)
 
-# Principle
+## Principle
 
-## Nuxeo side
+### Nuxeo side
 
-- expose un service that allows to downlaod the zip (basic auth)
+Exposes a service through a JAX-RS resource that allows to download the ZIP file.
+The ZIP structure is:
 
-## JIRA side
+server_info.zip
+  |__ system.info
+  |__ distrib.info
+  |__ packages.info
+  |__ nuxeo.conf
+  |__ server.log
 
-- create a plugin with a form including: server URL, userName, password# JIRA plugin for Nuxeo
+### JIRA side
 
+Plugin that adds custom fields on the issue form including: server URL, user name, password and a button to collect the information from the Nuxeo server.

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.server.info.service.ServerInfoCollector">
+
+  <documentation>
+    This service allows to collect information from the
+    server such as system information, Nuxeo distribution, installed
+    marketplace packages, Nuxeo configuration, server logs, etc.
+
+    @author
+    Antoine Taillefer
+  </documentation>
+
+  <implementation
+    class="org.nuxeo.ecm.server.info.service.impl.ServerInfoCollectorImpl" />
+
+  <service>
+    <provide interface="org.nuxeo.ecm.server.info.service.ServerInfoCollector" />
+  </service>
+
+</component>

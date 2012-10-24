@@ -5,31 +5,28 @@
 
   <parent>
     <groupId>org.nuxeo.ecm</groupId>
-    <artifactId>jira-nuxeo-support-parent</artifactId>
+    <artifactId>nuxeo-server-info-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>jira-nuxeo-support-core</artifactId>
-  <name>JIRA Nuxeo Support Plugin Core Project</name>
-  <description>JIRA Nuxeo Support Plugin Core Project</description>
+  <artifactId>nuxeo-server-info-core</artifactId>
+  <name>Nuxeo Server Info Core Project</name>
+  <description>Nuxeo Server Info Core Project</description>
 
   <dependencies>
 
     <!-- Nuxeo -->
     <dependency>
-      <groupId>org.nuxeo.ecm.automation</groupId>
-      <artifactId>nuxeo-automation-core</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.nuxeo.ecm.core</groupId>
       <artifactId>nuxeo-core-api</artifactId>
     </dependency>
-
-    <!-- Test -->
+    <dependency>
+      <groupId>org.nuxeo.ecm.platform</groupId>
+      <artifactId>nuxeo-admin-center</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.nuxeo.ecm.automation</groupId>
-      <artifactId>nuxeo-automation-test</artifactId>
-      <scope>test</scope>
+      <artifactId>nuxeo-automation-core</artifactId>
     </dependency>
 
   </dependencies>

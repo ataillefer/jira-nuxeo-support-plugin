@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Nuxeo
+Bundle-Version: 1.0.0
+Bundle-Name: JIRA Nuxeo Support Core
+Bundle-ManifestVersion: 1
+Bundle-SymbolicName: org.nuxeo.ecm.server.info.core;singleton=true
+Nuxeo-Component: OSGI-INF/server-info-collector-service-framework.xml
+Nuxeo-WebModule: org.nuxeo.ecm.webengine.app.WebEngineModule;name=collectServerInfo;package=org/nuxeo/ecm/server/info/jaxrs

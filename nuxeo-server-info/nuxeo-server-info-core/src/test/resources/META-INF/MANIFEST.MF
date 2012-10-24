@@ -3,4 +3,4 @@ Bundle-Vendor: Nuxeo
 Bundle-Version: 1.0.0
 Bundle-Name: JIRA Nuxeo Support Core Test
 Bundle-ManifestVersion: 1
-Bundle-SymbolicName: org.nuxeo.jira.support.core.test;singleton=true
+Bundle-SymbolicName: org.nuxeo.ecm.server.info.core.test;singleton=true
