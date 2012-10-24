@@ -85,8 +85,8 @@ public class ServerInfoCollectorImpl implements ServerInfoCollector {
 
             // Installed marketplace packages
             ConfigurationGenerator cg = new ConfigurationGenerator();
-            String installedPackages = getInstalledPackages(cg.getEnv());
-            addZipEntry(out, "packages.info", installedPackages);
+            // String installedPackages = getInstalledPackages(cg.getEnv());
+            // addZipEntry(out, "packages.info", installedPackages);
 
             // Nuxeo configuration (nuxeo.conf)
             File configFile = cg.getNuxeoConf();
